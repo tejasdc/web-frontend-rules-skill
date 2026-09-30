@@ -29,6 +29,22 @@ This is the same principle as `box-sizing: border-box` on JS-injected elements â
 
 Screenshots and reading source CSS are not sufficient. The compiled+inherited values are what matter, and only measurement shows them.
 
+## A row of controls in shared chrome never shrinks or wraps; the text gives way
+
+In any header, heading or toolbar with a title beside controls, the control group is `flex: none` with
+`flex-wrap: nowrap`, and the title takes what is left (`min-width: 0`, then ellipsis or wrap). A
+control group left to shrink wraps its own buttons the moment a title is long, and at phone width a
+close mark lands under its neighbour. Opening a native `<dialog>` with `showModal()` also focuses its
+first control, which a phone then draws with a focus ring; name the element to focus, or focus the
+window or its title, so nothing arrives ringed. Measure the shared chrome at 390 points with the
+longest real title before shipping it, not only the surface you changed.
+
+> "The file header is again, like taking a ball of the space, and look at how the alignment is broken
+> for the back button. Like, why, why are we building things like this?" (his report, 2026-09-30; the rule is an agent choice from it, [decision: window-controls-on-one-line];
+> thnkr.ing report f25b02ab: the file window's heading was 117 points tall with the close mark under
+> the bug mark, its details 107 more, the text starting 245 points down. Fixed in thnkr.ing 78a3e85;
+> its look tool now has a `file-open` state for this window.)
+
 ## Browser verification â€” choose tools by execution host
 
 **Linux / remote-box:** use standalone Playwright tests. Select engine and viewport coverage by affected behavior and repository policy; `browser-verification` owns that judgment, screenshot inspection, and evidence. Use `local-test` for fixture ownership and native parallel execution. Native iPhone Safari verification is not required. Do not require `webkit-pilot`, Xcode, or iOS Simulator, or treat their absence as a release blocker on Linux.
