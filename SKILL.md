@@ -47,6 +47,17 @@ longest real title before shipping it, not only the surface you changed.
 
 ## Browser verification — choose tools by execution host
 
+An internal file reference in agent prose owns its click even when its project or file
+cannot be resolved. Cancel ordinary browser navigation synchronously, then open the
+in-app file viewer or an honest unknown-location/missing-file state. Never let a relative
+repository path fall through to a plain browser anchor: the browser treats it as a page
+URL, reloads the app, and loses the file's project. The displayed conversation, the
+answer's author and the file's project may be three different places. Bind a named,
+registered project to that reference before using the author's project as a default;
+an unconfirmed named project stays unresolved. Check a real answer after release, since
+source inspection alone cannot prove the installed click. This recurred in thnkr.ing on
+2026-10-09 after earlier repairs covered only selected conversation surfaces.
+
 **Linux / remote-box:** use standalone Playwright tests. Select engine and viewport coverage by affected behavior and repository policy; `browser-verification` owns that judgment, screenshot inspection, and evidence. Use `local-test` for fixture ownership and native parallel execution. Native iPhone Safari verification is not required. Do not require `webkit-pilot`, Xcode, or iOS Simulator, or treat their absence as a release blocker on Linux.
 
 **Laptop / macOS:** `webkit-pilot` (native WKWebView) and iOS Simulator are optional laptop-only tools for Safari-focused testing when the task calls for it and they are available. They are not prerequisites for ordinary web changes. Native iPhone testing enters scope only when the user explicitly requests it.
