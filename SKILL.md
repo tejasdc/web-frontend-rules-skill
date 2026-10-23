@@ -53,18 +53,30 @@ nothing beside it moves. Decide this when the element is added, not after he see
 
 1. **Show no finer precision than he uses.** An ambient focus clock is minutes, not seconds; a
    value that changes less often has fewer chances to move anything.
-2. **Digits are tabular**: `font-variant-numeric: tabular-nums` on the element (check the face
-   really has tabular figures; system UI fonts do, some display faces do not). On Apple platforms,
+2. **Digits are tabular**: `font-variant-numeric: tabular-nums` on the element (it asks
+   the font for tabular figures; a face without them silently ignores it, and `system-ui` names
+   no particular face, so the reserved size in 3 must hold even if the digits stay proportional). On Apple platforms,
    `.monospacedDigit()` / `monospacedDigitSystemFont`.
-3. **Reserve the width of the longest value it can show**, not the current one: `min-width` (or
-   `inline-size`) in `ch` for the longest string ("188:88/120 · 12 PM", not "9:59"), or a
-   fixed grid track, and `white-space: nowrap`. Tabular digits alone do not stop `9:59` → `10:00`
-   from growing.
+3. **Reserve the size of the longest value it can show**, not the current one: a fixed
+   `inline-size` with `flex: none` (or a definite grid track) chosen from the formatter's longest
+   supported output ("188:88/120 · 12 PM", not "9:59"), or an invisible sizing sample of that
+   string with the live text laid over it, and `white-space: nowrap`. Tabular digits alone do not
+   stop `9:59` → `10:00` from growing; `min-width` is only a floor; `ch` is the width of one
+   "0", good for digit slots but not for a mixed string with letters and punctuation.
 4. **Overflow stays inside**: if a value can still exceed the box, it truncates or abbreviates in
    place (`overflow: hidden; text-overflow: ellipsis`, or a shorter format), never pushes.
-5. **Check it by changing the value, not by looking**: in the browser, measure the neighbours'
-   positions (`getBoundingClientRect`) at the shortest and longest value and require them equal,
-   or watch a `layout-shift` PerformanceObserver while it ticks. No screenshot comparison.
+5. **Check it by changing the value, not by looking**: in a real browser, drive the real
+   formatter through its boundaries (`9:59`→`10:00`, `99:59`→`100:00`, the goal, overtime,
+   paused) and require every neighbour's `getBoundingClientRect` to stay equal, and the value to
+   actually change and fit. A `layout-shift` observer or a CLS budget is only a diagnostic: Chrome
+   ignores moves under 3 pixels, WebKit lacks it, and input-adjacent shifts are excluded. No
+   screenshot comparison. Better still, one shared live-value element owns the slot and a build
+   check refuses a live value drawn outside it (thnkr.ing: `LiveText` and its header-fit check).
+
+Sources: Material 3 typography ("Use tabular numbers to prevent layout shifting when values change,
+such as in a clock UI"); Apple `monospacedDigit()` and SF Pro ("Numbers have proportional widths by
+default"); WebKit bug 209593 (media time label fixed with `tabular-nums`); CSS Fonts, Sizing,
+Containment and Layout Instability specs. Research: ChatGPT Pro, 2026-10-23.
 
 > "the timer in focus mode has to move the whole toolbar every time the second changes … One, I
 > don't think I need second-level detail. Two, make that fixed. Please have some basic design sense
