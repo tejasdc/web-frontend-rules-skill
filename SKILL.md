@@ -1,6 +1,6 @@
 ---
 name: web-frontend-rules
-description: Use when building or fixing web UI Tejas has already ruled on — a shared nav, footer, header or any component used on several pages, "the nav moves between pages", "it jumps when I navigate", "these should line up exactly", "pixel-identical", "alignment is off by a few pixels", React or Next.js data fetching and memoized props, and choosing browser-testing tools on the server versus the Mac (Playwright on Linux, webkit-pilot and the iOS Simulator only on the laptop). Pairs with `browser-verification` and `vercel-react-best-practices`.
+description: Use when building or fixing web UI Tejas has already ruled on — a shared nav, footer, header or any component used on several pages, "the nav moves between pages", "it jumps when I navigate", "these should line up exactly", "pixel-identical", "alignment is off by a few pixels", adding a timer, clock, counter, badge or any live number or status to a toolbar or header, "the timer moves the whole toolbar every time the second changes", "make that fixed", "changes inside it should stay within it", "numbers jump when they update", React or Next.js data fetching and memoized props, and choosing browser-testing tools on the server versus the Mac (Playwright on Linux, webkit-pilot and the iOS Simulator only on the laptop). Pairs with `browser-verification` and `vercel-react-best-practices`.
 ---
 
 # Web front-end rules
@@ -44,6 +44,37 @@ longest real title before shipping it, not only the surface you changed.
 > thnkr.ing report f25b02ab: the file window's heading was 117 points tall with the close mark under
 > the bug mark, its details 107 more, the text starting 245 points down. Fixed in thnkr.ing 78a3e85;
 > its look tool now has a `file-open` state for this window.)
+
+## Anything that changes in place has a fixed size; its changes never move its neighbours
+
+A timer, clock, counter, badge count, percentage, status word or progress label that updates while
+it is on screen gets a box whose size does not depend on its current value. Changes stay inside it;
+nothing beside it moves. Decide this when the element is added, not after he sees it twitch:
+
+1. **Show no finer precision than he uses.** An ambient focus clock is minutes, not seconds; a
+   value that changes less often has fewer chances to move anything.
+2. **Digits are tabular**: `font-variant-numeric: tabular-nums` on the element (check the face
+   really has tabular figures; system UI fonts do, some display faces do not). On Apple platforms,
+   `.monospacedDigit()` / `monospacedDigitSystemFont`.
+3. **Reserve the width of the longest value it can show**, not the current one: `min-width` (or
+   `inline-size`) in `ch` for the longest string ("188:88/120 · 12 PM", not "9:59"), or a
+   fixed grid track, and `white-space: nowrap`. Tabular digits alone do not stop `9:59` → `10:00`
+   from growing.
+4. **Overflow stays inside**: if a value can still exceed the box, it truncates or abbreviates in
+   place (`overflow: hidden; text-overflow: ellipsis`, or a shorter format), never pushes.
+5. **Check it by changing the value, not by looking**: in the browser, measure the neighbours'
+   positions (`getBoundingClientRect`) at the shortest and longest value and require them equal,
+   or watch a `layout-shift` PerformanceObserver while it ticks. No screenshot comparison.
+
+> "the timer in focus mode has to move the whole toolbar every time the second changes … One, I
+> don't think I need second-level detail. Two, make that fixed. Please have some basic design sense
+> … When we add an element to the toolbar, it should get a fixed size, and changes inside it should
+> stay within it. It should not overflow and move other icons around just because something inside
+> it is changing." (Tejas, 2026-10-23, the focus clock "108:32/120 · 6 PM" in the canvas toolbar.
+> The rule already existed as "nothing jumps" and "anything that may appear reserves its space" in
+> `interface-decisions`, and as tabular digits in `break-ui`, `animation-vocabulary` and
+> `design-taste-frontend`, none of which the agents that built the clock loaded; this is the
+> concrete form, in the skill that loads for web UI work.) [decision: changing-elements-have-fixed-size]
 
 ## Browser verification — choose tools by execution host
 
