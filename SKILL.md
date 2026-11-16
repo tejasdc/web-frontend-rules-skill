@@ -29,6 +29,27 @@ This is the same principle as `box-sizing: border-box` on JS-injected elements â
 
 Screenshots and reading source CSS are not sufficient. The compiled+inherited values are what matter, and only measurement shows them.
 
+## A shared window owns interaction, not only its appearance
+
+When a popup behaves differently, first trace its actual presenter and the inherited contract.
+Do not infer a bypass from the symptom: in thnkr.ing capture
+`7757ce4fca7f9b0c10aeb18d0db9894b094a415b9c78e1e31c6dcad653c5ca1d`
+(November 16, 2026), Go to already used the shared draggable window. Outside-click persistence
+was deliberate in the original presenter for side-by-side Settings use, then inherited by
+navigation without a dismissal check. The first relay incorrectly blamed non-reuse.
+Tejas asked: "Why is this window not closing when I click outside? ... How did an agent build
+this so independently without using the shared reference implementation? ... No agent should
+build anything that doesn't use it."
+
+Repair a changed default in its shared presenter; inventory separate windows, anchored menus,
+intentional holds and ongoing capture tools before migrating them. Preserve each tool's draft,
+pending operation and keyboard contract. Exercise outside, inside, nested choices and dragging
+in the actual browsers; opening the window is not evidence for dismissal. Enforce creation
+ownership at build time with exact shared presenters and positioned-surface declarations, not
+whole-file exceptions or a reminder to reuse. thnkr.ing's design-system check owns that refusal;
+its keyboard-focus contract and failure case `thinkering-go-to-shared-window-dismissal` own
+the implementation and live evidence.
+
 ## A row of controls in shared chrome never shrinks or wraps; the text gives way
 
 In any header, heading or toolbar with a title beside controls, the control group is `flex: none` with
